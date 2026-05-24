@@ -1,0 +1,52 @@
+---
+export interface Props {
+  value: number;
+  max?: number;
+  label: string;
+}
+const { value, max = 5, label } = Astro.props;
+const pct = Math.round((value / max) * 100);
+---
+
+<div class="rating" title={`${label}: ${value}/${max}`}>
+  <span class="rating-label">{label}</span>
+  <div class="rating-bar" role="meter" aria-valuenow={value} aria-valuemin="0" aria-valuemax={max} aria-label={`${label}: ${value} out of ${max}`}>
+    <div class="rating-fill" style={`width:${pct}%`}></div>
+  </div>
+  <span class="rating-value">{value}/{max}</span>
+</div>
+
+<style>
+.rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+.rating-label {
+  min-width: 130px;
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  font-weight: 500;
+}
+.rating-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rating-fill {
+  height: 100%;
+  background: var(--color-star);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.rating-value {
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+  min-width: 24px;
+  text-align: right;
+  font-weight: 600;
+}
+</style>

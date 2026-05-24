@@ -1,0 +1,75 @@
+---
+import { siteConfig } from '@data/siteConfig';
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-section">
+      <h3>{siteConfig.name}</h3>
+      <p>{siteConfig.description}</p>
+    </div>
+    <div class="footer-section">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/breeds/">All Breeds A-Z</a></li>
+        <li><a href="/categories/popular/">Popular Breeds</a></li>
+        <li><a href="/categories/hypoallergenic/">Hypoallergenic Breeds</a></li>
+        <li><a href="/categories/apartment-friendly/">Apartment-Friendly</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="/categories/longhair/">Longhair Cats</a></li>
+        <li><a href="/categories/shorthair/">Shorthair Cats</a></li>
+        <li><a href="/categories/hairless/">Hairless Cats</a></li>
+        <li><a href="/categories/large/">Large Breeds</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>About</h4>
+      <ul>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/privacy/">Privacy Policy</a></li>
+        <li><a href="/terms/">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p class="disclosure">As an Amazon Associate we earn from qualifying purchases.</p>
+      <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+.site-footer {
+  background: var(--color-primary);
+  color: #fff;
+  padding: var(--space-3xl) 0 0;
+  margin-top: var(--space-3xl);
+}
+.site-footer a { color: #ddd; }
+.site-footer a:hover { color: #fff; }
+.site-footer h3, .site-footer h4 { color: #fff; margin-bottom: var(--space-sm); }
+.site-footer h3 { font-size: var(--font-size-xl); }
+.site-footer h4 { font-size: var(--font-size-lg); }
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+}
+@media (min-width: 640px) { .footer-inner { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+.footer-section ul { list-style: none; padding: 0; }
+.footer-section li { margin-bottom: var(--space-xs); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding: var(--space-lg) 0;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: #aaa;
+}
+.disclosure { margin-bottom: var(--space-sm); font-style: italic; }
+</style>

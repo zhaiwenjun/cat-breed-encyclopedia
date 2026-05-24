@@ -1,0 +1,85 @@
+---
+import type { BreedFrontmatter } from '@types/breed';
+
+const { breed } = Astro.props as { breed: BreedFrontmatter };
+---
+
+<div class="breed-hero">
+  <div class="hero-image">
+    <img
+      src={breed.featuredImage}
+      alt={breed.featuredImageAlt}
+      width="800"
+      height="600"
+      loading="eager"
+      decoding="async"
+      onerror="this.src='/images/breeds/default.webp'"
+    />
+  </div>
+  <div class="hero-content">
+    <h1>{breed.name}</h1>
+    {breed.scientificName && <p class="scientific-name"><em>{breed.scientificName}</em></p>}
+    <p class="hero-description">{breed.metaDescription}</p>
+    <div class="hero-meta">
+      <span class="meta-item">📍 {breed.origin}</span>
+      <span class="meta-item">⏱️ {breed.lifespan}</span>
+      <span class="meta-item">🧶 {breed.coatLength}</span>
+      {breed.rarity !== 'common' && <span class="meta-item rarity-badge">💎 {breed.rarity.replace(/-/g, ' ')}</span>}
+    </div>
+  </div>
+</div>
+
+<style>
+.breed-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .breed-hero {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.hero-image img {
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+.hero-content h1 {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-xs);
+}
+.scientific-name {
+  color: var(--color-muted);
+  margin-bottom: var(--space-md);
+}
+.hero-description {
+  font-size: var(--font-size-lg);
+  color: var(--color-muted);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+.meta-item {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 4px 12px;
+  font-size: var(--font-size-sm);
+}
+.rarity-badge {
+  text-transform: capitalize;
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+</style>

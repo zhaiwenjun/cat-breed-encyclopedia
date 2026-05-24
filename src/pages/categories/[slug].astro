@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import BreedGrid from '@components/breed/BreedGrid.astro';
+import { canonicalURL, categoryURL } from '@utils/urls';
+import { collectionPageSchema } from '@utils/schema';
+
+export async function getStaticPaths() {
+  const categories = await getCollection('categories');
+  return categories.map(cat => ({
+    params: { slug: cat.slug },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const allBreeds = await getCollection('breeds');
+const categoryBreeds = allBreeds
+  .filter(b => b.data.categories.includes(category.slug))
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+const sd = {
+  ...collectionPageSchema(
+    category.data.metaTitle,
+    category.data.metaDescription,
+    categoryURL(category.slug)
+  ),
+};
+---
+
+<BaseLayout
+  title={category.data.metaTitle}
+  description={category.data.metaDescription}
+  image={category.data.featuredImage}
+  canonicalURL={categoryURL(category.slug)}
+  ogType="website"
+  structuredData={sd}
+>
+  <div class="container">
+    <Breadcrumbs items={[
+      { label: 'Home', href: canonicalURL('') },
+      { label: category.data.name },
+    ]} />
+
+    <header class="category-header">
+      {category.data.icon && <span class="category-icon">{category.data.icon}</span>}
+      <h1>{category.data.name}</h1>
+      <p class="category-description">{category.data.description}</p>
+      <p class="breed-count">
+        <strong>{categoryBreeds.length}</strong> breed{categoryBreeds.length !== 1 ? 's' : ''} in this category
+      </p>
+    </header>
+
+    {categoryBreeds.length > 0 ? (
+      <BreedGrid breeds={categoryBreeds.map(b => ({ ...b.data, slug: b.slug }))} showCategory={true} />
+    ) : (
+      <p class="empty-message">No breeds are currently listed in this category. Check back soon!</p>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+.category-header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-2xl) 0;
+}
+.category-icon { font-size: 3rem; display: block; margin-bottom: var(--space-sm); }
+.category-header h1 { margin-bottom: var(--space-sm); }
+.category-description {
+  font-size: var(--font-size-lg);
+  color: var(--color-muted);
+  max-width: 700px;
+  margin: 0 auto var(--space-md);
+}
+.breed-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+}
+.empty-message {
+  text-align: center;
+  color: var(--color-muted);
+  padding: var(--space-3xl) 0;
+  font-size: var(--font-size-lg);
+}
+</style>

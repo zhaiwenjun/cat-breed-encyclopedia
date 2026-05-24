@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import { canonicalURL } from '@utils/urls';
+---
+
+<BaseLayout
+  title="About Us - Cat Breed Encyclopedia"
+  description="Learn about Cat Breed Encyclopedia, our mission to provide the most comprehensive cat breed information, and our team of feline enthusiasts."
+  canonicalURL={canonicalURL('about')}
+>
+  <div class="container content-container">
+    <Breadcrumbs items={[{ label: 'Home', href: canonicalURL('') }, { label: 'About Us' }]} />
+
+    <h1>About Cat Breed Encyclopedia</h1>
+
+    <h2>Our Mission</h2>
+    <p>
+      At Cat Breed Encyclopedia, we believe every cat lover deserves accurate, comprehensive information to find their perfect feline companion. Our mission is to be the most trusted resource for cat breed information on the web, covering over 150 breeds with detailed profiles that include temperament, care requirements, health information, and stunning photography.
+    </p>
+
+    <h2>What We Offer</h2>
+    <ul>
+      <li><strong>Complete Breed Profiles:</strong> In-depth information on 150+ cat breeds from around the world.</li>
+      <li><strong>Care Guides:</strong> Practical advice on grooming, nutrition, and healthcare for each breed.</li>
+      <li><strong>Temperament Insights:</strong> Honest assessments of personality, energy levels, and compatibility with families and other pets.</li>
+      <li><strong>Photo Galleries:</strong> High-quality images to help you visualize each breed's unique appearance.</li>
+      <li><strong>Comparison Tools:</strong> Easily compare breeds side by side to find your ideal match.</li>
+    </ul>
+
+    <h2>Our Approach</h2>
+    <p>
+      Our content is thoroughly researched using reputable sources, breed standards from major cat fancier associations, and input from veterinarians and experienced breeders. We strive to present balanced information that highlights both the joys and challenges of living with each breed.
+    </p>
+    <p>
+      We regularly update our content to reflect the latest research and breed developments. Whether you're a first-time cat owner or a seasoned feline enthusiast, we're here to help you make informed decisions.
+    </p>
+
+    <h2>Contact Us</h2>
+    <p>
+      Have questions, suggestions, or corrections? We welcome your feedback. While we don't provide direct veterinary advice, we're happy to help with questions about our content or cat breeds in general.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+h1 { margin-bottom: var(--space-xl); }
+h2 { margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
+p { margin-bottom: var(--space-md); }
+ul { margin-bottom: var(--space-lg); }
+li { margin-bottom: var(--space-sm); }
+</style>

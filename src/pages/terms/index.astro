@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import { canonicalURL } from '@utils/urls';
+---
+
+<BaseLayout
+  title="Terms of Service - Cat Breed Encyclopedia"
+  description="Read the terms of service for using Cat Breed Encyclopedia."
+  canonicalURL={canonicalURL('terms')}
+  noindex={true}
+>
+  <div class="container content-container">
+    <Breadcrumbs items={[{ label: 'Home', href: canonicalURL('') }, { label: 'Terms of Service' }]} />
+
+    <h1>Terms of Service</h1>
+    <p><em>Last updated: May 2026</em></p>
+
+    <h2>Acceptance of Terms</h2>
+    <p>
+      By accessing Cat Breed Encyclopedia, you agree to these terms of service. If you do not agree, please discontinue use of the website.
+    </p>
+
+    <h2>Content Disclaimer</h2>
+    <p>
+      The information on Cat Breed Encyclopedia is for general informational and educational purposes only. While we strive for accuracy, we make no guarantees about the completeness, reliability, or accuracy of the content. The information should not be used as a substitute for professional veterinary advice, diagnosis, or treatment.
+    </p>
+
+    <h2>Medical Disclaimer</h2>
+    <p>
+      Cat Breed Encyclopedia does not provide veterinary medical advice. The content is not intended to diagnose, treat, cure, or prevent any disease or health condition in animals. Always consult a licensed veterinarian for medical concerns about your pet.
+    </p>
+
+    <h2>Intellectual Property</h2>
+    <p>
+      All original content, including text, graphics, and website design, is the property of Cat Breed Encyclopedia and is protected by applicable copyright laws. Images may be sourced from various providers and are used under license.
+    </p>
+
+    <h2>Limitation of Liability</h2>
+    <p>
+      Cat Breed Encyclopedia shall not be liable for any damages arising from the use of or inability to use the information on this website.
+    </p>
+
+    <h2>External Links</h2>
+    <p>
+      Our website contains links to external sites. We are not responsible for the content or privacy practices of these sites.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+h1 { margin-bottom: var(--space-md); }
+h2 { margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
+p { margin-bottom: var(--space-md); }
+</style>

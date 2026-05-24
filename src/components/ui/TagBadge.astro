@@ -1,0 +1,32 @@
+---
+export interface Props {
+  label: string;
+  href?: string;
+}
+const { label, href } = Astro.props;
+---
+
+{href ? (
+  <a href={href} class="tag-badge">{label}</a>
+) : (
+  <span class="tag-badge">{label}</span>
+)}
+
+<style>
+.tag-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  background: rgba(225, 112, 85, 0.1);
+  border: 1px solid rgba(225, 112, 85, 0.2);
+  border-radius: 20px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+a.tag-badge:hover {
+  background: var(--color-accent);
+  color: #fff;
+}
+</style>

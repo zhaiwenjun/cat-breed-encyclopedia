@@ -1,0 +1,43 @@
+---
+import type { BreedFrontmatter } from '@types/breed';
+import BreedCard from './BreedCard.astro';
+
+export interface Props {
+  relatedSlugs: string[];
+  allBreeds: BreedFrontmatter[];
+}
+
+const { relatedSlugs, allBreeds } = Astro.props;
+const related = relatedSlugs
+  .map(slug => allBreeds.find(b => b.slug === slug))
+  .filter((b): b is BreedFrontmatter => !!b);
+
+if (related.length === 0) return null;
+---
+
+<section class="related-breeds">
+  <h2>Related Breeds</h2>
+  <div class="related-grid">
+    {related.slice(0, 4).map(breed => (
+      <BreedCard breed={breed} />
+    ))}
+  </div>
+</section>
+
+<style>
+.related-breeds {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+.related-breeds h2 {
+  margin-bottom: var(--space-lg);
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+@media (min-width: 480px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .related-grid { grid-template-columns: repeat(4, 1fr); } }
+</style>

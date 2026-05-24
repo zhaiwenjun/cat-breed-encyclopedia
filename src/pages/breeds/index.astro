@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import BreedCard from '@components/breed/BreedCard.astro';
+import AlphabetNav from '@components/ui/AlphabetNav.astro';
+import { canonicalURL } from '@utils/urls';
+import { collectionPageSchema, websiteSchema } from '@utils/schema';
+
+const breeds = await getCollection('breeds');
+const allBreeds = breeds
+  .map(b => ({ ...b.data, slug: b.slug }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const letters = [...new Set(allBreeds.map(b => b.name[0].toUpperCase()))].sort();
+
+const grouped: Record<string, typeof allBreeds> = {};
+letters.forEach(l => {
+  grouped[l] = allBreeds.filter(b => b.name[0].toUpperCase() === l);
+});
+
+const sd = {
+  ...collectionPageSchema(
+    'All Cat Breeds A-Z',
+    'Complete A-Z list of 150+ cat breeds with pictures, temperament info, and care guides.',
+    canonicalURL('breeds')
+  ),
+  ...websiteSchema(),
+};
+---
+
+<BaseLayout
+  title="All Cat Breeds A-Z: Complete List of 150+ Breeds with Pictures"
+  description="Browse our complete A-to-Z list of every cat breed. Each breed profile includes pictures, temperament info, care guides, and more."
+  canonicalURL={canonicalURL('breeds')}
+  ogType="website"
+  structuredData={sd}
+>
+  <div class="container">
+    <Breadcrumbs items={[{ label: 'Home', href: canonicalURL('') }, { label: 'All Breeds' }]} />
+
+    <h1>All Cat Breeds A-Z</h1>
+    <p class="intro">Explore our complete guide to {allBreeds.length} cat breeds. Click any breed to see detailed information, pictures, care guides, and more.</p>
+
+    <AlphabetNav availableLetters={letters} />
+
+    <div class="breeds-index">
+      {letters.map(letter => (
+        <section id={`letter-${letter}`} class="letter-section">
+          <h2>{letter}</h2>
+          <div class="letter-breeds">
+            {grouped[letter].map(breed => (
+              <BreedCard breed={breed} showCategory={true} />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+h1 {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-sm);
+}
+.intro {
+  font-size: var(--font-size-lg);
+  color: var(--color-muted);
+  margin-bottom: var(--space-xl);
+}
+.breeds-index {
+  margin-top: var(--space-2xl);
+}
+.letter-section {
+  margin-bottom: var(--space-2xl);
+  scroll-margin-top: 100px;
+}
+.letter-section h2 {
+  font-size: var(--font-size-2xl);
+  padding-bottom: var(--space-sm);
+  border-bottom: 3px solid var(--color-accent);
+  margin-bottom: var(--space-lg);
+  color: var(--color-accent);
+}
+.letter-breeds {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+@media (min-width: 480px) { .letter-breeds { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .letter-breeds { grid-template-columns: repeat(3, 1fr); } }
+</style>

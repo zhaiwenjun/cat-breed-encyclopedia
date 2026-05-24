@@ -1,0 +1,108 @@
+---
+import type { BreedFrontmatter } from '@types/breed';
+
+const { breed } = Astro.props as { breed: BreedFrontmatter };
+
+const ratingLabel = (n: number): string => {
+  const labels: Record<number, string> = { 1: 'Very Low', 2: 'Low', 3: 'Moderate', 4: 'High', 5: 'Very High' };
+  return labels[n] || String(n);
+};
+
+const ratingStars = (n: number): string => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+const coatLengthLabel: Record<string, string> = {
+  hairless: 'Hairless', shorthair: 'Shorthair', mediumhair: 'Medium Hair', longhair: 'Longhair',
+};
+
+interface Stat {
+  label: string;
+  value: string;
+  note?: string;
+  type?: 'rating' | 'text';
+}
+
+const stats: Stat[] = [
+  { label: 'Coat Length', value: coatLengthLabel[breed.coatLength] || breed.coatLength },
+  { label: 'Coat Type', value: breed.coatType },
+  { label: 'Shedding', value: ratingStars(breed.sheddingLevel), note: ratingLabel(breed.sheddingLevel), type: 'rating' },
+  { label: 'Grooming', value: ratingStars(breed.groomingNeeds), note: ratingLabel(breed.groomingNeeds), type: 'rating' },
+  { label: 'Energy Level', value: ratingStars(breed.energyLevel), note: ratingLabel(breed.energyLevel), type: 'rating' },
+  { label: 'Vocalization', value: ratingStars(breed.vocalizationLevel), note: ratingLabel(breed.vocalizationLevel), type: 'rating' },
+  { label: 'Child Friendly', value: ratingStars(breed.childFriendly), note: ratingLabel(breed.childFriendly), type: 'rating' },
+  { label: 'Pet Friendly', value: ratingStars(breed.petFriendly), note: ratingLabel(breed.petFriendly), type: 'rating' },
+  { label: 'Intelligence', value: ratingStars(breed.intelligence), note: ratingLabel(breed.intelligence), type: 'rating' },
+  { label: 'Colors', value: breed.colors.join(', ') },
+  { label: 'Patterns', value: breed.patterns.join(', ') },
+  { label: 'Eye Colors', value: breed.eyeColors.join(', ') },
+];
+---
+
+<div class="quick-facts">
+  <h2>Quick Facts</h2>
+  <div class="facts-grid">
+    {stats.map(stat => (
+      <div class="fact-item">
+        <span class="fact-label">{stat.label}</span>
+        <span class={`fact-value${stat.type === 'rating' ? ' rating' : ''}`}>
+          {stat.type === 'rating' ? (
+            <><span class="stars">{stat.value}</span><span class="rating-label">{stat.note}</span></>
+          ) : (
+            stat.value
+          )}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+.quick-facts {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+.quick-facts h2 {
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-xl);
+}
+.facts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+}
+@media (min-width: 480px) {
+  .facts-grid { grid-template-columns: 1fr 1fr; }
+}
+.fact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.fact-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+.fact-value {
+  font-size: var(--font-size-sm);
+}
+.stars {
+  color: var(--color-star);
+  letter-spacing: 2px;
+}
+.rating-label {
+  color: var(--color-muted);
+  margin-left: var(--space-sm);
+  font-size: var(--font-size-xs);
+}
+.rating {
+  display: flex;
+  align-items: center;
+}
+</style>

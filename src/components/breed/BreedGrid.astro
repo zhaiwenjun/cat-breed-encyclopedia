@@ -1,0 +1,42 @@
+---
+import type { BreedFrontmatter } from '@types/breed';
+import BreedCard from './BreedCard.astro';
+
+export interface Props {
+  breeds: BreedFrontmatter[];
+  showCategory?: boolean;
+  columns?: 2 | 3 | 4;
+}
+
+const { breeds, showCategory = false, columns = 3 } = Astro.props;
+---
+
+<div class={`breed-grid cols-${columns}`}>
+  {breeds.map(breed => (
+    <BreedCard breed={breed} showCategory={showCategory} />
+  ))}
+</div>
+
+<style>
+.breed-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+@media (min-width: 480px) { .breed-grid { grid-template-columns: repeat(2, 1fr); } }
+.breed-grid.cols-2 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 480px) { .breed-grid.cols-2 { grid-template-columns: repeat(2, 1fr); } }
+.breed-grid.cols-3 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 480px) { .breed-grid.cols-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .breed-grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+.breed-grid.cols-4 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 480px) { .breed-grid.cols-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .breed-grid.cols-4 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1100px) { .breed-grid.cols-4 { grid-template-columns: repeat(4, 1fr); } }
+</style>

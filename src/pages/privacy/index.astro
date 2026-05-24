@@ -1,0 +1,68 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import { canonicalURL } from '@utils/urls';
+---
+
+<BaseLayout
+  title="Privacy Policy - Cat Breed Encyclopedia"
+  description="Our privacy policy explains how we collect, use, and protect your information when you visit Cat Breed Encyclopedia."
+  canonicalURL={canonicalURL('privacy')}
+  noindex={true}
+>
+  <div class="container content-container">
+    <Breadcrumbs items={[{ label: 'Home', href: canonicalURL('') }, { label: 'Privacy Policy' }]} />
+
+    <h1>Privacy Policy</h1>
+    <p><em>Last updated: May 2026</em></p>
+
+    <h2>Information We Collect</h2>
+    <p>
+      Cat Breed Encyclopedia does not directly collect personal information. We do not have user accounts, comment sections, or contact forms that collect personal data.
+    </p>
+
+    <h2>Automatically Collected Information</h2>
+    <p>
+      Like most websites, we use standard web analytics services that may collect anonymous information such as:
+    </p>
+    <ul>
+      <li>Pages visited and time spent on each page</li>
+      <li>Browser type and operating system</li>
+      <li>Referring website or search engine</li>
+      <li>General geographic location (country/city level)</li>
+    </ul>
+    <p>
+      This information is aggregated and cannot be used to identify individual visitors.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>
+      We may use cookies for analytics and to improve your browsing experience. You can disable cookies in your browser settings at any time.
+    </p>
+
+    <h2>Third-Party Services</h2>
+    <p>We may use third-party services including:</p>
+    <ul>
+      <li><strong>Google Fonts:</strong> For typography on our website.</li>
+      <li><strong>Analytics:</strong> For understanding how visitors use our site.</li>
+    </ul>
+
+    <h2>Affiliate Disclosure</h2>
+    <p>
+      Cat Breed Encyclopedia participates in affiliate advertising programs. When you click on some links and make a purchase, we may earn a small commission at no additional cost to you. This helps support our work in maintaining and updating the encyclopedia.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have questions about this privacy policy, please contact us via our website.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+h1 { margin-bottom: var(--space-md); }
+h2 { margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
+p { margin-bottom: var(--space-md); }
+ul { margin-bottom: var(--space-lg); }
+li { margin-bottom: var(--space-sm); }
+</style>

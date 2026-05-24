@@ -1,0 +1,211 @@
+---
+import { getCollection } from 'astro:content';
+import type { BreedFrontmatter } from '@types/breed';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@layouts/Breadcrumbs.astro';
+import BreedHero from '@components/breed/BreedHero.astro';
+import BreedQuickFacts from '@components/breed/BreedQuickFacts.astro';
+import RelatedBreeds from '@components/breed/RelatedBreeds.astro';
+import BackToTop from '@components/ui/BackToTop.astro';
+import StructuredData from '@components/seo/StructuredData.astro';
+import { breedURL, canonicalURL } from '@utils/urls';
+import { animalBreedSchema, breadcrumbListSchema, faqPageSchema } from '@utils/schema';
+
+export async function getStaticPaths() {
+  const breeds = await getCollection('breeds');
+  return breeds.map(breed => ({
+    params: { slug: breed.slug },
+    props: { breed: { ...breed.data, slug: breed.slug } },
+  }));
+}
+
+const { breed } = Astro.props as { breed: BreedFrontmatter };
+const breedEntries = await getCollection('breeds');
+const allBreedsWithSlug = breedEntries.map(b => ({ ...b.data, slug: b.slug }));
+const allBreeds = allBreedsWithSlug;
+
+const primaryCategory = breed.categories[0] || 'shorthair';
+const categoryName = primaryCategory.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+const breadcrumbs = [
+  { label: 'Home', href: canonicalURL('') },
+  { label: `${categoryName} Cats`, href: canonicalURL(`categories/${primaryCategory}`) },
+  { label: breed.name },
+];
+
+const breadcrumbSd = breadcrumbListSchema([
+  { name: 'Home', url: canonicalURL('') },
+  { name: `${categoryName} Cats`, url: canonicalURL(`categories/${primaryCategory}`) },
+  { name: breed.name },
+]);
+
+// FAQ extraction - parse from markdown content at build time via regex
+// For now, generate core FAQs from breed data
+const faqItems = [
+  {
+    question: `Are ${breed.name} cats hypoallergenic?`,
+    answer: breed.categories.includes('hypoallergenic')
+      ? `Yes, ${breed.name} cats are considered hypoallergenic as they produce fewer allergens than most breeds. However, no cat is 100% hypoallergenic.`
+      : `No, ${breed.name} cats are not considered hypoallergenic. They produce normal levels of Fel d 1 protein, the primary cat allergen. Regular grooming and cleaning can help reduce allergens.`,
+  },
+  {
+    question: `How much does a ${breed.name} kitten cost?`,
+    answer: breed.rarity === 'rare' || breed.rarity === 'very-rare'
+      ? `${breed.name} kittens from reputable breeders typically cost between $1,000 and $3,000 USD. Due to their rarity, waiting lists are common.`
+      : `${breed.name} kittens from reputable breeders typically cost between $500 and $1,500 USD, depending on pedigree, location, and breeder reputation.`,
+  },
+  {
+    question: `How long do ${breed.name} cats live?`,
+    answer: `${breed.name} cats typically live ${breed.lifespan}. With proper care, regular vet checkups, a healthy diet, and an indoor lifestyle, many live toward the upper end of this range.`,
+  },
+  {
+    question: `Do ${breed.name} cats get along with dogs?`,
+    answer: breed.petFriendly >= 4
+      ? `Yes, ${breed.name} cats generally get along very well with dogs and other pets. Their friendly, adaptable nature makes them excellent companions in multi-pet households.`
+      : breed.petFriendly >= 3
+        ? `${breed.name} cats can get along with dogs with proper introduction and socialization. They have a moderate adaptability to other pets.`
+        : `${breed.name} cats may take time to warm up to dogs. Slow, supervised introductions are recommended for multi-pet households.`,
+  },
+  {
+    question: `Do ${breed.name} cats shed a lot?`,
+    answer: breed.sheddingLevel >= 4
+      ? `Yes, ${breed.name} cats are heavy shedders. Regular brushing and grooming are essential to manage loose fur.`
+      : breed.sheddingLevel <= 2
+        ? `${breed.name} cats are low shedders, making them relatively easy to maintain. Occasional brushing is sufficient to keep their coat healthy.`
+        : `${breed.name} cats have a moderate shedding level. Weekly brushing helps minimize loose fur around the home.`,
+  },
+];
+
+const structuredData = {
+  ...animalBreedSchema(breed),
+  ...breadcrumbSd,
+  ...faqPageSchema(faqItems),
+};
+---
+
+<BaseLayout
+  title={breed.metaTitle}
+  description={breed.metaDescription}
+  image={breed.featuredImage}
+  canonicalURL={breedURL(breed.slug)}
+  ogType="article"
+  structuredData={structuredData}
+>
+  <div class="container content-container">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <BreedHero breed={breed} />
+
+    <BreedQuickFacts breed={breed} />
+
+    <!-- Table of Contents -->
+    <nav class="toc" aria-label="Table of Contents">
+      <h3>On This Page</h3>
+      <ul>
+        <li><a href="#history">History &amp; Origin</a></li>
+        <li><a href="#appearance">Appearance &amp; Physical Traits</a></li>
+        <li><a href="#personality">Personality &amp; Temperament</a></li>
+        <li><a href="#care">Care &amp; Grooming Guide</a></li>
+        <li><a href="#health">Health &amp; Lifespan</a></li>
+        <li><a href="#diet">Diet &amp; Nutrition</a></li>
+        <li><a href="#exercise">Exercise Needs</a></li>
+        <li><a href="#right-for-you">Is This Breed Right For You?</a></li>
+        <li><a href="#faq">Frequently Asked Questions</a></li>
+      </ul>
+    </nav>
+
+    <!-- Breed Article Body -->
+    <article class="breed-article">
+      <slot />
+    </article>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        {faqItems.map(faq => (
+          <details class="faq-item">
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Affiliate Disclosure -->
+    <p class="affiliate-note">This article may contain affiliate links. As an Amazon Associate we earn from qualifying purchases.</p>
+  </div>
+
+  <!-- Related Breeds -->
+  <div class="container">
+    <RelatedBreeds
+      relatedSlugs={[...breed.relatedBreeds, ...breed.similarBreeds]}
+      allBreeds={allBreeds}
+    />
+  </div>
+
+  <BackToTop />
+</BaseLayout>
+
+<style>
+.breed-article {
+  line-height: 1.8;
+  margin-bottom: var(--space-2xl);
+}
+.breed-article :global(h2) {
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-border);
+  scroll-margin-top: 80px;
+}
+.breed-article :global(h3) {
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+  scroll-margin-top: 80px;
+}
+.breed-article :global(p) { margin-bottom: var(--space-md); }
+.breed-article :global(ul), .breed-article :global(ol) { margin-bottom: var(--space-md); }
+.breed-article :global(li) { margin-bottom: var(--space-xs); }
+.breed-article :global(strong) { font-weight: 600; }
+
+.toc {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+.toc h3 { margin-bottom: var(--space-sm); font-size: var(--font-size-lg); }
+.toc ul { list-style: none; padding: 0; margin: 0; }
+.toc li { margin-bottom: 4px; }
+.toc a { font-size: var(--font-size-sm); }
+
+.faq-section { margin-bottom: var(--space-2xl); }
+.faq-section h2 { margin-bottom: var(--space-lg); }
+.faq-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+.faq-item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  background: var(--color-bg);
+}
+.faq-item summary {
+  font-weight: 600;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+}
+.faq-item p {
+  margin-top: var(--space-sm);
+  color: var(--color-muted);
+}
+
+.affiliate-note {
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  color: var(--color-muted);
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+</style>

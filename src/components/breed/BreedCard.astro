@@ -1,0 +1,100 @@
+---
+import type { BreedFrontmatter } from '@types/breed';
+
+export interface Props {
+  breed: BreedFrontmatter;
+  showCategory?: boolean;
+}
+
+const { breed, showCategory = false } = Astro.props;
+const primaryCategory = breed.categories[0] || 'shorthair';
+const categoryLabel = primaryCategory.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+---
+
+<a href={`/breeds/${breed.slug}/`} class="breed-card">
+  <div class="card-image">
+    <img
+      src={breed.featuredImage}
+      alt={breed.featuredImageAlt}
+      width="400"
+      height="300"
+      loading="lazy"
+      decoding="async"
+      onerror="this.src='/images/breeds/default.webp'"
+    />
+    {breed.featured && <span class="featured-badge">Featured</span>}
+  </div>
+  <div class="card-body">
+    <h3>{breed.name}</h3>
+    <p class="card-desc">{breed.metaDescription}</p>
+    <div class="card-meta">
+      <span>{breed.origin}</span>
+      {showCategory && <span>{categoryLabel}</span>}
+    </div>
+  </div>
+</a>
+
+<style>
+.breed-card {
+  display: block;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.breed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  color: var(--color-primary);
+}
+.card-image {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.breed-card:hover .card-image img {
+  transform: scale(1.05);
+}
+.featured-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.card-body {
+  padding: var(--space-md);
+}
+.card-body h3 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-xs);
+}
+.card-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  margin-bottom: var(--space-sm);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta {
+  display: flex;
+  gap: var(--space-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+}
+</style>
