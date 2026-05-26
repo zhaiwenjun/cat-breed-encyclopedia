@@ -28,8 +28,8 @@ const primaryCategory = breed.categories[0] || 'shorthair';
 const categoryName = primaryCategory.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
 const breadcrumbs = [
-  { label: 'Home', href: canonicalURL('') },
-  { label: `${categoryName} Cats`, href: canonicalURL(`categories/${primaryCategory}`) },
+  { label: 'Home', href: '/' },
+  { label: `${categoryName} Cats`, href: `/categories/${primaryCategory}/` },
   { label: breed.name },
 ];
 

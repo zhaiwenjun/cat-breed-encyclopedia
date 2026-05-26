@@ -3,11 +3,11 @@ export const siteConfig = {
   tagline: 'Discover 150+ Cat Breeds',
   description: 'Explore our comprehensive guide to 150+ cat breeds. Find the perfect feline companion with detailed breed profiles, care guides, photos, and temperament information.',
   url: 'https://catbreedencyclopedia.com',
-  defaultImage: '/images/breeds/default.webp',
+  defaultImage: '/images/breeds/default.jpg',
   locale: 'en_US',
   twitterHandle: '',
   author: 'Cat Breed Encyclopedia',
   amazonAssociatesId: '',
   googleAdsenseId: '',
-  googleAnalyticsId: '',
+  googleAnalyticsId: 'G-LD8YL3970G',
 } as const;

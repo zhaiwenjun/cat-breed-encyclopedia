@@ -1,4 +1,5 @@
 ---
+import { siteConfig } from '@data/siteConfig';
 export interface Props {
   title: string;
   description: string;
@@ -10,7 +11,7 @@ export interface Props {
 }
 const { title, description, image, canonicalURL, noindex = false, ogType = 'website', structuredData } = Astro.props;
 const fullTitle = `${title} - Cat Breed Encyclopedia`;
-const ogImage = image || '/images/breeds/default.webp';
+const ogImage = image?.startsWith('http') ? image : `${siteConfig.url}${image || '/images/breeds/default.jpg'}`;
 ---
 
 <title>{fullTitle}</title>
@@ -41,4 +42,14 @@ const ogImage = image || '/images/breeds/default.webp';
 
 {structuredData && (
   <script type="application/ld+json" set:html={JSON.stringify(structuredData, null, 2)}></script>
+)}
+
+{siteConfig.googleAnalyticsId && (
+  <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.googleAnalyticsId}`}></script>
+  <script is:inline set:html={`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${siteConfig.googleAnalyticsId}');
+  `} />
 )}

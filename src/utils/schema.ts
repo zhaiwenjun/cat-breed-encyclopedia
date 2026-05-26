@@ -37,7 +37,7 @@ export function animalBreedSchema(breed: BreedFrontmatter) {
     '@type': 'AnimalBreed',
     name: breed.name,
     description: breed.metaDescription,
-    image: `${siteConfig.url}${breed.featuredImage}`,
+    image: breed.featuredImage.startsWith('http') ? breed.featuredImage : `${siteConfig.url}${breed.featuredImage}`,
     additionalProperty: [
       { '@type': 'PropertyValue', name: 'Origin', value: breed.origin },
       { '@type': 'PropertyValue', name: 'Lifespan', value: breed.lifespan },
